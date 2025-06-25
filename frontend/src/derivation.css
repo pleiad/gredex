@@ -1,0 +1,30 @@
+.infer {
+  display: inline-block;
+  margin: 4px 8px 0px 8px;
+  text-align: center;
+  /*border: 1px solid #eee;*/
+  padding-left: 40px;
+}
+.infer .premise {
+  border-bottom: 1px solid #000;
+}
+
+.infer .premise-more {
+  cursor: pointer;
+}
+.infer .ruleName {
+  position: absolute;
+  margin-left: -2px;
+  margin-top: -24px;
+  transform: translateX(-100%);
+  font-size: 80%;
+}
+
+.itype {
+  display: none;
+}
+
+.judgment {
+  display: inline-block;
+  margin: 4px 8px;
+}
