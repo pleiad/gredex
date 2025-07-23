@@ -271,3 +271,12 @@ class RuntimeTest extends munit.FunSuite {
     successRun(input, expected)
   }
 }
+
+
+sealed trait Expr
+case class Number(n: Int) extends Expr
+case class Add(e1: Expr, e2: Expr) extends Expr
+
+def eval(e: Expr): Int = e match {
+  case Number(n) => n
+}

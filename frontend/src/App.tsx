@@ -63,7 +63,7 @@ function App() {
           <AppBar position="static">
             <Toolbar>
               <Typography variant="h6" sx={{ flexGrow: 1 }}>
-                Visual Type Derivations
+                Gredex
               </Typography>
 
               <IconButton
