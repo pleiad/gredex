@@ -9,20 +9,20 @@ import akka.http.scaladsl.server.Directives.*
 import akka.http.scaladsl.model.StatusCodes
 import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport.*
 import akka.http.scaladsl.Http
-import lang.syntax.{Syntax, TypeError}
+import glang.syntax.{Syntax, TypeError}
 
 import scala.io.StdIn
 import spray.json.*
-import lang.Parser
-import lang.typing.{
+import glang.Parser
+import glang.typing.{
   IConfLatex,
   IOptions,
   LatexDerivationTree,
   LatexJudgment,
   VariableNotFoundException
 }
-import lang.typing.simple.TypedElaboration
-import lang.runtime.simple.SimpleReducer
+import glang.typing.simple.TypedElaboration
+import glang.runtime.simple.SimpleReducer
 
 final case class Program(
     program: String,
