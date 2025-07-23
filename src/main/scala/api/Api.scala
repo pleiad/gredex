@@ -24,6 +24,8 @@ import glang.typing.{
 import glang.typing.simple.TypedElaboration
 import glang.runtime.simple.SimpleReducer
 
+import scala.concurrent.duration.Duration
+
 final case class Program(
     program: String,
     hideEvidences: Boolean = false,
@@ -199,12 +201,15 @@ object Api {
         }
       )
 
-    val bindingFuture = Http().newServerAt("localhost", 8080).bind(route)
-    println(s"Server online at http://localhost:8080/\nPress ENTER to stop...")
-    StdIn.readLine()
-    bindingFuture
-      .flatMap(_.unbind())
-      .onComplete(_ => system.terminate())
+    val bindingFuture = Http().newServerAt("0.0.0.0", 8080).bind(route)
+    println(s"Server online at http://0.0.0.0:8080/")
+    sys.addShutdownHook {
+      bindingFuture
+        .flatMap(_.unbind())
+        .onComplete(_ => system.terminate())
+    }
+
+    Await.result(system.whenTerminated, Duration.Inf)
   }
 
 }
