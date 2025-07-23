@@ -86,11 +86,11 @@ Gredex is a web-based application designed to help researchers and educators exp
 
 Before getting started with Gredex, ensure your runtime environment meets the following requirements:
 
-- **Frontend**: Node.js (v16 or higher), npm
-- **Backend**: Scala 3.3.5, sbt
+- **Frontend**: Node.js v20, npm
+- **Backend**: Scala 3.3.5, sbt 1.10.11
 - **Dependencies**:
-  - Akka HTTP (backend)
-  - Material-UI, MathJax, React, and TypeScript (frontend)
+  - Pekko (v1.0.2), Pekko HTTP (v1.0.1) (backend)
+  - Material-UI (7.1.1), MathJax (3.2.2), React (19.1.0), and TypeScript (5.8.3) (frontend)
 
 ### Installation and Compilation
 
