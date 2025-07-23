@@ -20,13 +20,12 @@
 - [Project Structure](#project-structure)
 - [Getting Started](#getting-started)
   - [Prerequisites](#prerequisites)
-  - [Installation](#installation)
-  - [Usage](#usage)
-  - [Testing](#testing)
-- [Compilation and Deployment](#compilation-and-deployment)
+  - [Installation and Compilation](#installation-and-compilation)
+- [Running the Application](#running-the-application)
+- [Testing](#testing)
+- [Extending Gredex](#extending-gredex-adding-new-language-constructs-or-typing-disciplines)
 - [License](#license)
 - [Acknowledgments](#acknowledgments)
-- [Extending Gredex](#extending-gredex-adding-new-language-constructs-or-typing-disciplines)
 
 ---
 
@@ -113,7 +112,7 @@ Before getting started with Gredex, ensure your runtime environment meets the fo
 
 ---
 
-### Running the Application
+## Running the Application
 
 3. Start the application:
 
@@ -135,7 +134,7 @@ sbt test
 
 ---
 
-## Extending Gredex: Adding New Language Constructs or Typing Disciplines
+## Extending Gredex
 
 Gredex's backend is powered by the `glang` library, a modular Scala library designed for gradual language semantics. Extending the language involves modifying or adding to the following core modules:
 
