@@ -156,9 +156,13 @@ Gredex's backend is powered by the `glang` library, a modular Scala library desi
    - If introducing a new type discipline, define the rules for consistency and evidence generation.
 
 4. **Runtime Module (`runtime/`)**:
+
    - Implement the reduction semantics for the new constructs.
    - Define how the constructs behave during program execution.
    - Update the runtime evaluation logic to handle the new constructs.
+
+5. **Frontend (`frontend/src/components/`)**:
+   - Update the React components to incorporate the new syntax in the syntax description popup and ensure it is properly displayed in the user interface.
 
 By following these steps, you can extend Gredex to support new language features or typing disciplines, enabling experimentation with novel gradual typing semantics.
 
