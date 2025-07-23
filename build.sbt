@@ -9,15 +9,18 @@ lazy val root = (project in file("."))
     name := "Gredex"
   )
 
-resolvers += "Akka library repository".at("https://repo.akka.io/maven")
+// Versions
+val PekkoVersion = "1.0.2"
+val PekkoHttpVersion = "1.0.1"
 
-val AkkaVersion = "2.9.3"
-val AkkaHttpVersion = "10.6.3"
 libraryDependencies ++= Seq(
-  "com.typesafe.akka" %% "akka-actor-typed" % AkkaVersion,
-  "com.typesafe.akka" %% "akka-stream" % AkkaVersion,
-  "com.typesafe.akka" %% "akka-http" % AkkaHttpVersion,
-  "com.typesafe.akka" %% "akka-http-spray-json" % AkkaHttpVersion
+  // core
+  "org.apache.pekko" %% "pekko-actor-typed" % PekkoVersion,
+  "org.apache.pekko" %% "pekko-stream" % PekkoVersion,
+
+  // HTTP + JSON
+  "org.apache.pekko" %% "pekko-http" % PekkoHttpVersion,
+  "org.apache.pekko" %% "pekko-http-spray-json" % PekkoHttpVersion
 )
 
 libraryDependencies += "org.scalameta" %% "munit" % "0.7.29" % Test

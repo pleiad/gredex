@@ -1,14 +1,14 @@
 package api
 
-import akka.actor.typed.ActorSystem
-import akka.actor.typed.scaladsl.Behaviors
+import org.apache.pekko.actor.typed.ActorSystem
+import org.apache.pekko.actor.typed.scaladsl.Behaviors
 
 import scala.concurrent.*
-import akka.http.scaladsl.server.Route
-import akka.http.scaladsl.server.Directives.*
-import akka.http.scaladsl.model.StatusCodes
-import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport.*
-import akka.http.scaladsl.Http
+import org.apache.pekko.http.scaladsl.server.Route
+import org.apache.pekko.http.scaladsl.server.Directives.*
+import org.apache.pekko.http.scaladsl.model.StatusCodes
+import org.apache.pekko.http.scaladsl.marshallers.sprayjson.SprayJsonSupport.*
+import org.apache.pekko.http.scaladsl.Http
 import glang.syntax.{Syntax, TypeError}
 
 import scala.io.StdIn
@@ -78,122 +78,118 @@ object Api {
       concat(
         post {
           path("api" / "typecheck") {
-            cors() {
-              entity(as[Program]) { f =>
-                Parser.parse(formatInput(f.program)) match {
-                  case Right(term) =>
-                    try {
+            entity(as[Program]) { f =>
+              Parser.parse(formatInput(f.program)) match {
+                case Right(term) =>
+                  try {
 
-                      implicit val o: IOptions = IOptions(f.hideEvidences)
-                      val iterm = TypedElaboration(term)
+                    implicit val o: IOptions = IOptions(f.hideEvidences)
+                    val iterm = TypedElaboration(term)
 
-                      val latex = iterm.toLatex
-                      val tree = iterm.getLatexDerivationTree
+                    val latex = iterm.toLatex
+                    val tree = iterm.getLatexDerivationTree
 
-                      complete(
-                        JsObject(
-                          "status" -> JsString("OK"),
-                          "program" -> JsString(f.program),
-                          "intrinsicTerm" -> JsString(latex),
-                          "tree" -> latexDerivationTreeToJson(tree)
-                        )
-                      )
-                    } catch {
-                      case e =>
-                        e.printStackTrace()
-                        complete(
-                          JsObject(
-                            "status" -> JsString("KO"),
-                            "error" -> JsString(e.getMessage)
-                          )
-                        )
-                    }
-
-                  case Left(error) =>
                     complete(
                       JsObject(
-                        "status" -> JsString("KO"),
-                        "error" -> JsString(("Parse error: " + error))
+                        "status" -> JsString("OK"),
+                        "program" -> JsString(f.program),
+                        "intrinsicTerm" -> JsString(latex),
+                        "tree" -> latexDerivationTreeToJson(tree)
                       )
                     )
-                }
+                  } catch {
+                    case e =>
+                      e.printStackTrace()
+                      complete(
+                        JsObject(
+                          "status" -> JsString("KO"),
+                          "error" -> JsString(e.getMessage)
+                        )
+                      )
+                  }
 
+                case Left(error) =>
+                  complete(
+                    JsObject(
+                      "status" -> JsString("KO"),
+                      "error" -> JsString(("Parse error: " + error))
+                    )
+                  )
               }
+
             }
           }
         },
         post {
           path("api" / "reduce") {
-            cors() {
-              entity(as[Program]) { f =>
-                Parser.parse(formatInput(f.program)) match {
-                  case Right(term) =>
-                    try {
-                      implicit val o: IOptions = IOptions(f.hideEvidences)
-                      val reducer = SimpleReducer(
-                        TypedElaboration(term),
-                        fromStep = f.fromStep,
-                        stepSize = f.stepSize
-                      )
+            entity(as[Program]) { f =>
+              Parser.parse(formatInput(f.program)) match {
+                case Right(term) =>
+                  try {
+                    implicit val o: IOptions = IOptions(f.hideEvidences)
+                    val reducer = SimpleReducer(
+                      TypedElaboration(term),
+                      fromStep = f.fromStep,
+                      stepSize = f.stepSize
+                    )
 
-                      val r = reducer.reduce
+                    val r = reducer.reduce
 
-                      val error: Option[String] = r.r match {
-                        case Left(a)  => None
-                        case Right(e) => Some(e.getMessage())
-                      }
-
-                      val confs = r.configurations
-                      complete(
-                        JsObject(
-                          "status" -> JsString("OK"),
-                          "program" -> JsString(f.program),
-                          "confs" -> JsArray(
-                            confs
-                              .drop(f.fromStep)
-                              .map(iConfLatexToJson)
-                              .toVector
-                          ),
-                          "error" -> error.map(JsString).getOrElse(JsNull),
-                          "finished" -> JsBoolean(r.finished),
-                          "step" -> JsNumber(r.step)
-                        )
-                      )
-
-                    } catch {
-                      case e: VariableNotFoundException =>
-                        complete(
-                          JsObject(
-                            "status" -> JsString("KO1"),
-                            "error" -> JsString(e.getMessage)
-                          )
-                        )
-                      case e: TypeError =>
-                        complete(
-                          JsObject(
-                            "status" -> JsString("KO2"),
-                            "error" -> JsString(e.getMessage)
-                          )
-                        )
-                      case e: Throwable =>
-                        complete(
-                          JsObject(
-                            "status" -> JsString("KO3"),
-                            "error" -> JsString(e.getMessage)
-                          )
-                        )
+                    val error: Option[String] = r.r match {
+                      case Left(a)  => None
+                      case Right(e) => Some(e.getMessage())
                     }
 
-                  case Left(error) =>
+                    val confs = r.configurations
                     complete(
                       JsObject(
-                        "status" -> JsString("KO"),
-                        "error" -> JsString(("Parse error: " + error))
+                        "status" -> JsString("OK"),
+                        "program" -> JsString(f.program),
+                        "confs" -> JsArray(
+                          confs
+                            .drop(f.fromStep)
+                            .map(iConfLatexToJson)
+                            .toVector
+                        ),
+                        "error" -> error.map(JsString).getOrElse(JsNull),
+                        "finished" -> JsBoolean(r.finished),
+                        "step" -> JsNumber(r.step)
                       )
                     )
-                }
 
+                  } catch {
+                    case e: VariableNotFoundException =>
+                      complete(
+                        JsObject(
+                          "status" -> JsString("KO1"),
+                          "error" -> JsString(e.getMessage)
+                        )
+                      )
+                    case e: TypeError =>
+                      complete(
+                        JsObject(
+                          "status" -> JsString("KO2"),
+                          "error" -> JsString(e.getMessage)
+                        )
+                      )
+                    case e: Throwable =>
+                      complete(
+                        JsObject(
+                          "status" -> JsString("KO3"),
+                          "error" -> JsString(e.getMessage)
+                        )
+                      )
+                  }
+
+                case Left(error) =>
+                  complete(
+                    JsObject(
+                      "status" -> JsString("KO"),
+                      "error" -> JsString(("Parse error: " + error))
+                    )
+                  )
               }
+
             }
           }
         },

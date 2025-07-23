@@ -20,9 +20,13 @@
 - [Getting Started](#getting-started)
   - [Prerequisites](#prerequisites)
   - [Installation and Compilation](#installation-and-compilation)
+  - [Running the Frontend in Development Mode](#running-the-frontend-in-development-mode)
 - [Running the Application](#running-the-application)
+- [Using Docker](#using-docker)
+  - [Build the Docker Image](#build-the-docker-image)
+  - [Run the Docker Container](#run-the-docker-container)
 - [Testing](#testing)
-- [Extending Gredex](#extending-gredex-adding-new-language-constructs-or-typing-disciplines)
+- [Extending Gredex](#extending-gredex)
 - [License](#license)
 - [Acknowledgments](#acknowledgments)
 
@@ -109,6 +113,29 @@ Before getting started with Gredex, ensure your runtime environment meets the fo
    sbt compile
    ```
 
+### Running the Frontend in Development Mode
+
+To run the frontend in development mode, navigate to the `frontend` directory and use the following commands:
+
+1. Navigate to the `frontend` directory:
+
+   ```sh
+   cd frontend
+   ```
+
+2. Install the required dependencies (if not already installed):
+
+   ```sh
+   npm install
+   ```
+
+3. Start the development server:
+   ```sh
+   npm run dev
+   ```
+
+The frontend will be accessible at `http://localhost:5173` (or another port if specified).
+
 ---
 
 ## Running the Application
@@ -120,6 +147,30 @@ Before getting started with Gredex, ensure your runtime environment meets the fo
    ```
 
 The application will launch the backend server and serve the frontend assets. Open your browser and navigate to `http://localhost:8080` to access Gredex.
+
+---
+
+## Using Docker
+
+You can build and run Gredex using Docker to ensure a consistent and reproducible environment.
+
+### Build the Docker Image
+
+From the root directory of the project, run the following command to build the Docker image:
+
+```sh
+docker build -t gredex:latest .
+```
+
+### Run the Docker Container
+
+To start the application using the Docker container, run:
+
+```sh
+docker run -p 8080:8080 gredex:latest
+```
+
+The application will be accessible at `http://localhost:8080`.
 
 ---
 

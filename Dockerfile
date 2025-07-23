@@ -1,25 +1,18 @@
-# Use a base image with Scala, SBT, and Node.js preinstalled
-FROM hseeberger/scala-sbt:11.0.19_1.9.9_3.3.1
+# Dockerfile  (root of the repo)
+FROM sbtscala/scala-sbt:eclipse-temurin-jammy-11.0.20.1_1_1.9.7_3.3.1
 
-# Install Node.js (v16+) and npm manually
-RUN curl -fsSL https://deb.nodesource.com/setup_16.x | bash - && \
-    apt-get install -y nodejs git && \
-    npm install -g npm
+# system tools + Node 18-LTS
+RUN apt-get update && \
+    apt-get install -y curl gnupg && \
+    curl -fsSL https://deb.nodesource.com/setup_18.x | bash - && \
+    apt-get install -y nodejs
 
-# Set working directory
 WORKDIR /gredex
-
-# Copy source code (assumes you copy the full repo into the Docker build context)
 COPY . .
 
-# Install frontend dependencies and build frontend
+# build frontend and backend
 RUN sbt buildFrontend
-
-# Compile backend
 RUN sbt compile
 
-# Expose the port used by the backend
 EXPOSE 8080
-
-# Start the server
-CMD ["sbt", "run"]
+CMD ["sbt","run"]
