@@ -1,0 +1,7 @@
+target/
+project/target/
+.idea/
+*.log
+*.tmp
+node_modules/
+target
