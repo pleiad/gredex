@@ -1,266 +1,212 @@
 [
   {
-    "text": "number",
-    "program": "1",
-    "desc": "A simple integer literal.",
-    "expect": "success"
-  },
-  {
     "text": "addition",
     "program": "1 + 2",
     "desc": "Addition of two integers.",
-    "expect": "success"
+    "expect": "success",
+    "category": "Numbers"
   },
   {
     "text": "addition nested",
     "program": "(1 + 2) + (3 + 4)",
     "desc": "Nested additions.",
-    "expect": "success"
-  },
-  {
-    "text": "boolean",
-    "program": "true",
-    "desc": "A boolean literal.",
-    "expect": "success"
+    "expect": "success",
+    "category": "Numbers"
   },
   {
     "text": "boolean negation",
     "program": "(not true)",
     "desc": "Negation of a boolean.",
-    "expect": "success"
+    "expect": "success",
+    "category": "Booleans"
   },
   {
     "text": "boolean negation nested",
     "program": "(not (not (not true)))",
     "desc": "Triple boolean negation.",
-    "expect": "success"
+    "expect": "success",
+    "category": "Booleans"
   },
   {
     "text": "conditional then branch",
     "program": "if true then 1 else 2",
     "desc": "If expression where condition is true.",
-    "expect": "success"
+    "expect": "success",
+    "category": "Booleans"
   },
   {
     "text": "conditional else branch",
     "program": "if not true then 1 else 2",
     "desc": "If expression where condition is false.",
-    "expect": "success"
+    "expect": "success",
+    "category": "Booleans"
   },
   {
     "text": "conditional nested",
     "program": "if true then if false then 1 else 2 else 3",
     "desc": "Nested conditional.",
-    "expect": "success"
-  },
-  {
-    "text": "lambda",
-    "program": "(λx: int. x)",
-    "desc": "Lambda expression that returns its input.",
-    "expect": "success"
+    "expect": "success",
+    "category": "Booleans"
   },
   {
     "text": "lambda application",
     "program": "(λx: int. x) 1",
     "desc": "Applying identity lambda to 1.",
-    "expect": "success"
+    "expect": "success",
+    "category": "Functions"
   },
   {
     "text": "lambda nested application",
     "program": "((λx: int. (λ y: int. x + y)) 1) 2",
     "desc": "Nested lambdas with addition.",
-    "expect": "success"
+    "expect": "success",
+    "category": "Functions"
   },
   {
     "text": "ascription",
     "program": "1 :: int",
     "desc": "Ascription of number to int.",
-    "expect": "success"
+    "expect": "success",
+    "category": "Ascriptions"
   },
   {
     "text": "ascription nested",
     "program": "1 :: int :: ?",
     "desc": "Nested ascriptions.",
-    "expect": "success"
+    "expect": "success",
+    "category": "Ascriptions"
   },
   {
     "text": "let",
     "program": "let x = 1 in x + 2",
     "desc": "Let-binding with arithmetic.",
-    "expect": "success"
+    "expect": "success",
+    "category": "Let"
   },
   {
     "text": "pair",
     "program": "(1, true)",
     "desc": "Pair of int and bool.",
-    "expect": "success"
+    "expect": "success",
+    "category": "Pairs"
   },
   {
     "text": "pair first",
     "program": "fst (1, true)",
     "desc": "First projection of a pair.",
-    "expect": "success"
+    "expect": "success",
+    "category": "Pairs"
   },
   {
     "text": "pair second",
     "program": "snd (1, true)",
     "desc": "Second projection of a pair.",
-    "expect": "success"
+    "expect": "success",
+    "category": "Pairs"
   },
   {
     "text": "pair nested first first",
     "program": "fst fst ((1, true), (2, false))",
     "desc": "Nested pair projections.",
-    "expect": "success"
+    "expect": "success",
+    "category": "Pairs"
   },
   {
     "text": "sum left",
     "program": "inl 1",
     "desc": "Left injection without annotation.",
-    "expect": "success"
+    "expect": "success",
+    "category": "Sums"
   },
   {
     "text": "sum right",
     "program": "inr true",
     "desc": "Right injection without annotation.",
-    "expect": "success"
+    "expect": "success",
+    "category": "Sums"
   },
   {
     "text": "sum left annotated",
     "program": "inl {bool} 1",
     "desc": "Left injection with right type annotation.",
-    "expect": "success"
+    "expect": "success",
+    "category": "Sums"
   },
   {
     "text": "sum left nested",
     "program": "inl (inl 1)",
     "desc": "Nested left injections.",
-    "expect": "success"
+    "expect": "success",
+    "category": "Sums"
   },
   {
     "text": "case left",
     "program": "case inl {bool} 1 of {x => x>0} {y => not y}",
     "desc": "Case on inl value.",
-    "expect": "success"
+    "expect": "success",
+    "category": "Sums"
   },
   {
     "text": "case right",
     "program": "case inr {int} true of {x => x>0} {y => not y}",
     "desc": "Case on inr value.",
-    "expect": "success"
+    "expect": "success",
+    "category": "Sums"
   },
   {
     "text": "conditional error",
     "program": "if (2 :: ?) then 1 else 2",
     "desc": "Invalid if condition with incorrect type.",
-    "expect": "fail"
+    "expect": "fail",
+    "category": "Booleans"
   },
   {
     "text": "lambda runtime error",
     "program": "(λx: ?. x + 1) true",
     "desc": "Runtime error due to applying unknown function to boolean.",
-    "expect": "fail"
+    "expect": "fail",
+    "category": "Functions"
   },
   {
     "text": "ascription number to boolean error",
     "program": "1 :: ? :: bool",
     "desc": "Invalid ascription of int to bool.",
-    "expect": "fail"
+    "expect": "fail",
+    "category": "Ascriptions"
   },
   {
     "text": "ascription function error",
     "program": "(λx. x) :: int -> int :: ? -> ? :: ? -> bool",
     "desc": "Invalid function ascription.",
-    "expect": "fail"
+    "expect": "fail",
+    "category": "Ascriptions"
   },
   {
     "text": "fix",
     "program": "fix f. (λx. f x)",
     "desc": "Recursive identity function.",
-    "expect": "success"
+    "expect": "success",
+    "category": "Fix"
   },
   {
     "text": "fix even",
     "program": "((fix isEven. (λx. if x == 0 then true else (if (x-1) == 0 then false else isEven (x - 2)))) 7)",
     "desc": "Checks whether 7 is even using recursion.",
-    "expect": "success"
+    "expect": "success",
+    "category": "Fix"
   },
   {
     "text": "fix taut inline",
     "program": "((fix f. (λn. (λh. if n == 0 then h else ((f (n-1)) (h false) ) ))) 1) (λx. x)",
     "desc": "Applies a recursive tautology generator.",
-    "expect": "success"
-  },
-  {
-    "text": "let",
-    "program": "let x = 1 in x + 2",
-    "desc": "Let-binding and arithmetic.",
-    "expect": "success"
+    "expect": "success",
+    "category": "Fix"
   },
   {
     "text": "let taut",
     "program": "let taut = fix f. (λn. (λh. if n == 0 then h else ((f (n-1)) (h false) ) )) in\n (taut 1) :: ((bool -> bool)-> bool) (λx. x)",
     "desc": "Combines let-binding and fix with function application.",
-    "expect": "success"
-  },
-  {
-    "text": "pair",
-    "program": "(1, true)",
-    "desc": "Pair of integer and boolean.",
-    "expect": "success"
-  },
-  {
-    "text": "pair first",
-    "program": "fst (1, true)",
-    "desc": "First projection of a pair.",
-    "expect": "success"
-  },
-  {
-    "text": "pair second",
-    "program": "snd (1, true)",
-    "desc": "Second projection of a pair.",
-    "expect": "success"
-  },
-  {
-    "text": "pair nested first first",
-    "program": "fst fst ((1, true), (2, false))",
-    "desc": "Nested pair projections.",
-    "expect": "success"
-  },
-  {
-    "text": "sum left",
-    "program": "inl 1",
-    "desc": "Left injection of integer into sum.",
-    "expect": "success"
-  },
-  {
-    "text": "sum right",
-    "program": "inr true",
-    "desc": "Right injection of boolean into sum.",
-    "expect": "success"
-  },
-  {
-    "text": "sum left annotated",
-    "program": "inl {bool} 1",
-    "desc": "Left injection with type annotation.",
-    "expect": "success"
-  },
-  {
-    "text": "sum left nested",
-    "program": "inl (inl 1)",
-    "desc": "Nested sum injection.",
-    "expect": "success"
-  },
-  {
-    "text": "case left",
-    "program": "case inl {bool} 1 of {x => x>0} {y => not y}",
-    "desc": "Case on sum left.",
-    "expect": "success"
-  },
-  {
-    "text": "case right",
-    "program": "case inr {int} true of {x => x>0} {y => not y}",
-    "desc": "Case on sum right.",
-    "expect": "success"
+    "expect": "success",
+    "category": "Let"
   }
 ]

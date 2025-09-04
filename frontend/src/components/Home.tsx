@@ -15,6 +15,7 @@ import {
   FormControlLabel,
   FormGroup,
   Stack,
+  ListSubheader,
 } from "@mui/material";
 import Select from "@mui/material/Select";
 import type { SelectChangeEvent } from "@mui/material/Select";
@@ -35,11 +36,16 @@ const empty = {
     " -- Select an example from this list to load it in the scratchpad --" + "",
   program: "",
   desc: "",
+  category: "",
 };
-const examples: { text: string; program: string; desc?: string }[] = [
-  empty,
-  ...base_examples,
-];
+type Example = {
+  text: string;
+  program: string;
+  desc?: string;
+  expect?: "success" | "fail";
+  category?: string;
+};
+const examples: Example[] = [empty, ...base_examples];
 export default function Main() {
   const { example } = useParams();
   const navigate = useNavigate();
@@ -216,6 +222,13 @@ export default function Main() {
     setHideEvidences(event.target.checked);
   };
 
+  //examples group by category, some do not have category, those add them at the end
+  const examplesByCategory = examples.reduce((acc, example, i) => {
+    const category = example.category || "";
+    (acc[category] = acc[category] || []).push({ ...example, id: i });
+    return acc;
+  }, {} as Record<string, (Example & { id: number })[]>);
+
   return (
     <Paper sx={{ p: 2 }}>
       <Dialog open={syntaxOpen} onClose={() => setSyntaxOpen(false)} fullWidth>
@@ -234,11 +247,18 @@ export default function Main() {
           onChange={handleSelectChange}
           label="Preloaded examples"
         >
-          {examples.map((e, i) => (
-            <MenuItem key={i} value={i}>
-              {e.text}
-            </MenuItem>
-          ))}
+          {Object.entries(examplesByCategory).map(([category, examples]) => {
+            const list = [
+              <ListSubheader key={category}>{category}</ListSubheader>,
+            ].concat(
+              examples.map((e) => (
+                <MenuItem key={e.id} value={e.id}>
+                  {e.text}
+                </MenuItem>
+              ))
+            );
+            return list;
+          })}
         </Select>
       </FormControl>
 
