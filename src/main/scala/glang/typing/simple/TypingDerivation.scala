@@ -350,12 +350,12 @@ case class IAsc(
       if (synth) {
         if (o.hideSynthAsc) s"${t.toLatex}"
         else
-          s"{\\color{#cccccc} (${
+          s"{\\color{#89CFF0} (${
               if (o.hideEvidences) "" else s"${e.toLatex}"
-            }} ${ptfy(t, _.toLatex)} {\\color{#cccccc} :: ${ty.toLatex})}"
+            }} ${ptfy(t, _.toLatex)} {\\color{#89CFF0}\\,:: ${ty.toLatex})}"
 
       } else
-        s"(${if (o.hideEvidences) "" else e.toLatex} ${t.toLatex} :: ${ty.toLatex})"
+        s"(${if (o.hideEvidences) "" else e.toLatex} ${t.toLatex}\\,:: ${ty.toLatex})"
     }
   )
 
