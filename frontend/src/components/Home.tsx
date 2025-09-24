@@ -362,7 +362,7 @@ export default function Main() {
                     color={"primary"}
                     onClick={reduce}
                   >
-                    Reduce!
+                    Reduce
                   </Button>
                 </div>
                 <div>
