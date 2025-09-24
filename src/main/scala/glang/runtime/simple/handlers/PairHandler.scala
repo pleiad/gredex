@@ -20,13 +20,13 @@ case class PairHandler(reducer: SimpleReducer)(using
      */
     case (
           lstack @ IContext(
-            v @ IPair(v1 @ IAsc(v1t, t1, ev1), v2 @ IAsc(v2t, t2, ev2)),
+            v @ IPair(v1 @ IAsc(v1t, t1, ev1, s1), v2 @ IAsc(v2t, t2, ev2, s2)),
             env
           ) :: lxs,
           lenv
         ) if v1.isValue && v2.isValue =>
       val newE =
-        IAsc(IPair(v1t, v2t), PairType(t1, t2), toPair(ev1, ev2))
+        IAsc(IPair(v1t, v2t), PairType(t1, t2), toPair(ev1, ev2), s1 || s2)
       Step(
         reducer,
         lstack,
@@ -43,12 +43,12 @@ case class PairHandler(reducer: SimpleReducer)(using
      */
     case (
           lstack @ IContext(
-            IFirst(v @ IAsc(IPair(v1, v2), PairType(t1, t2), ev)),
+            IFirst(v @ IAsc(IPair(v1, v2), PairType(t1, t2), ev, s)),
             env
           ) :: lxs,
           lenv
         ) if v.isValue =>
-      val newE = IAsc(v1, t1, invpi1(ev))
+      val newE = IAsc(v1, t1, invpi1(ev), s)
       Step(
         reducer,
         lstack,
@@ -89,12 +89,12 @@ case class PairHandler(reducer: SimpleReducer)(using
      */
     case (
           lstack @ IContext(
-            ISecond(v @ IAsc(IPair(v1, v2), PairType(t1, t2), ev)),
+            ISecond(v @ IAsc(IPair(v1, v2), PairType(t1, t2), ev, s)),
             env
           ) :: lxs,
           lenv
         ) if v.isValue =>
-      val newE = IAsc(v2, t2, invpi2(ev))
+      val newE = IAsc(v2, t2, invpi2(ev), s)
       Step(
         reducer,
         lstack,

@@ -24,7 +24,7 @@ object Ops {
     *   The result of the operation, with type information
     */
   def unop(op: String, v: TypingDerivation): TypingDerivation = (op, v) match {
-    case (Syntax.notS.parser | "not", IAsc(IBool(b), _, _)) =>
+    case (Syntax.notS.parser | "not", IAsc(IBool(b), _, _, _)) =>
       IAsc(IBool(!b), BoolType())
   }
 
@@ -48,28 +48,36 @@ object Ops {
   ): TypingDerivation =
     (op, v1, v2) match {
       // Arithmetic operations
-      case ("+", IAsc(INumber(n1), _, _), IAsc(INumber(n2), _, _)) =>
+      case ("+", IAsc(INumber(n1), _, _, _), IAsc(INumber(n2), _, _, _)) =>
         IAsc(INumber(n1 + n2), IntType())
-      case ("-", IAsc(INumber(n1), _, _), IAsc(INumber(n2), _, _)) =>
+      case ("-", IAsc(INumber(n1), _, _, _), IAsc(INumber(n2), _, _, _)) =>
         IAsc(INumber(n1 - n2), IntType())
-      case ("*", IAsc(INumber(n1), _, _), IAsc(INumber(n2), _, _)) =>
+      case ("*", IAsc(INumber(n1), _, _, _), IAsc(INumber(n2), _, _, _)) =>
         IAsc(INumber(n1 * n2), IntType())
-      case ("/", IAsc(INumber(n1), _, _), IAsc(INumber(n2), _, _)) =>
+      case ("/", IAsc(INumber(n1), _, _, _), IAsc(INumber(n2), _, _, _)) =>
         if (n2 == 0) throw new RuntimeException("Division by zero")
         else IAsc(INumber(n1 / n2), IntType())
 
       // Comparisons
-      case ("==", IAsc(INumber(n1), _, _), IAsc(INumber(n2), _, _)) =>
+      case ("==", IAsc(INumber(n1), _, _, _), IAsc(INumber(n2), _, _, _)) =>
         IAsc(IBool(n1 == n2), BoolType())
-      case ("<", IAsc(INumber(n1), _, _), IAsc(INumber(n2), _, _)) =>
+      case ("<", IAsc(INumber(n1), _, _, _), IAsc(INumber(n2), _, _, _)) =>
         IAsc(IBool(n1 < n2), BoolType())
-      case (">", IAsc(INumber(n1), _, _), IAsc(INumber(n2), _, _)) =>
+      case (">", IAsc(INumber(n1), _, _, _), IAsc(INumber(n2), _, _, _)) =>
         IAsc(IBool(n1 > n2), BoolType())
 
       // Logical operators
-      case (Syntax.andS.parser, IAsc(IBool(b1), _, _), IAsc(IBool(b2), _, _)) =>
+      case (
+            Syntax.andS.parser,
+            IAsc(IBool(b1), _, _, _),
+            IAsc(IBool(b2), _, _, _)
+          ) =>
         IAsc(IBool(b1 && b2), BoolType())
-      case (Syntax.orS.parser, IAsc(IBool(b1), _, _), IAsc(IBool(b2), _, _)) =>
+      case (
+            Syntax.orS.parser,
+            IAsc(IBool(b1), _, _, _),
+            IAsc(IBool(b2), _, _, _)
+          ) =>
         IAsc(IBool(b1 || b2), BoolType())
     }
 
@@ -104,8 +112,8 @@ object Ops {
       reconstructITerm(IContext(IApp(t1, c2.t), env) :: xs)
 
     // Ascription
-    case c1 :: IContext(IAsc(IHole(), ty, ev), env) :: xs =>
-      reconstructITerm(IContext(IAsc(c1.t, ty, ev), env) :: xs)
+    case c1 :: IContext(IAsc(IHole(), ty, ev, s), env) :: xs =>
+      reconstructITerm(IContext(IAsc(c1.t, ty, ev, s), env) :: xs)
 
     // Fixpoint
     case c1 :: IContext(IFix(x, IHole()), env) :: xs =>
@@ -175,8 +183,8 @@ object Ops {
       IApp(subst(t1, x, v), subst(t2, x, v))
 
     // Ascription
-    case IAsc(t, ty, ev) =>
-      IAsc(subst(t, x, v), ty, ev)
+    case IAsc(t, ty, ev, s) =>
+      IAsc(subst(t, x, v), ty, ev, s)
 
     // Fix
     case IFix(y, e) =>

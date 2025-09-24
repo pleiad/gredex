@@ -17,15 +17,18 @@ case class FunctionHandler(reducer: SimpleReducer)(using
     /** IN {v1 @ v2, ...} OUT {v1 [op] v2, ...} */
     case (
           lstack @ IContext(
-            IApp(t1 @ IAsc(ILambda(x, e), ty1, ev1), t2 @ IAsc(v, ty2, ev2)),
+            IApp(
+              t1 @ IAsc(ILambda(x, e), ty1, ev1, s1),
+              t2 @ IAsc(v, ty2, ev2, s2)
+            ),
             env
           ) :: lxs,
           lenv
         ) if t1.isValue && t2.isValue =>
       trans(ev2, invdom(ev1)) match {
         case Left(ev) =>
-          val newV = IAsc(v, x.tpe, ev)
-          val newE = IAsc(Ops.subst(e, x, newV), cod(ty1), invcod(ev1))
+          val newV = IAsc(v, x.tpe, ev, s1)
+          val newE = IAsc(Ops.subst(e, x, newV), cod(ty1), invcod(ev1), s1)
           Step(
             reducer,
             lstack,

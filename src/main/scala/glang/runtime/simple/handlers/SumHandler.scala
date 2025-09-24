@@ -20,14 +20,14 @@ case class SumHandler(reducer: SimpleReducer)(using
      */
     case (
           lstack @ IContext(
-            v @ IInl(v1 @ IAsc(v1t, t1, ev1), ty),
+            v @ IInl(v1 @ IAsc(v1t, t1, ev1, s), ty),
             env
           ) :: lxs,
           lenv
         ) if !v.isValue =>
       val eright = interior(ty, ty)
       val newE =
-        IAsc(IInl(v1t, ty), SumType(t1, ty), toSuml(ev1, eright))
+        IAsc(IInl(v1t, ty), SumType(t1, ty), toSuml(ev1, eright), s)
       Step(
         reducer,
         lstack,
@@ -44,14 +44,14 @@ case class SumHandler(reducer: SimpleReducer)(using
      */
     case (
           lstack @ IContext(
-            v @ IInr(v1 @ IAsc(v1t, t1, ev1), ty),
+            v @ IInr(v1 @ IAsc(v1t, t1, ev1, s), ty),
             env
           ) :: lxs,
           lenv
         ) if !v.isValue =>
       val eleft = interior(ty, ty)
       val newE =
-        IAsc(IInr(v1t, ty), SumType(ty, t1), toSumr(eleft, ev1))
+        IAsc(IInr(v1t, ty), SumType(ty, t1), toSumr(eleft, ev1), s)
       Step(
         reducer,
         lstack,
@@ -68,12 +68,12 @@ case class SumHandler(reducer: SimpleReducer)(using
      */
     case (
           lstack @ IContext(
-            ICase(v @ IAsc(IInl(v1, _), ty, ev), x1, t1, x2, t2),
+            ICase(v @ IAsc(IInl(v1, _), ty, ev, s), x1, t1, x2, t2),
             env
           ) :: lxs,
           lenv
         ) if v.isValue =>
-      val newE = Ops.subst(t1, x1, IAsc(v1, pis1(ty), invpis1(ev)))
+      val newE = Ops.subst(t1, x1, IAsc(v1, pis1(ty), invpis1(ev), s))
       Step(
         reducer,
         lstack,
@@ -89,12 +89,12 @@ case class SumHandler(reducer: SimpleReducer)(using
      */
     case (
           lstack @ IContext(
-            ICase(v @ IAsc(IInr(v1, _), ty, ev), x1, t1, x2, t2),
+            ICase(v @ IAsc(IInr(v1, _), ty, ev, s), x1, t1, x2, t2),
             env
           ) :: lxs,
           lenv
         ) if v.isValue =>
-      val newE = Ops.subst(t2, x2, IAsc(v1, pis2(ty), invpis2(ev)))
+      val newE = Ops.subst(t2, x2, IAsc(v1, pis2(ty), invpis2(ev), s))
       Step(
         reducer,
         lstack,

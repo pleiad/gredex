@@ -37,7 +37,8 @@ trait TypingDerivation
     val text = s
     /* highlighting and boxing of text */
     val htext = if (highlight == 1) s"\\highlight{$text}" else text
-    if (boxed == 1) s"\\bbox[1px,border:2px solid red]{$htext}" else htext
+    if (boxed == 1 && !o.hideBoxes) s"\\bbox[1px,border:2px solid red]{$htext}"
+    else htext
   }
 
   /** The subterms of the derivation By default they are empty
@@ -64,7 +65,9 @@ trait TypingDerivation
   def getLatexDerivationTree(implicit o: IOptions): LatexDerivationTree = {
     LatexDerivationTree(
       toLatex + s" : ${tpe.toLatex}",
-      subTerms.map { t => t.getLatexDerivationTree }.toList,
+      subTerms.map { t =>
+        t.getLatexDerivationTree(o.copy(hideBoxes = true))
+      }.toList,
       judgments.map { j => LatexJudgment(j.toLatex) }.toList,
       derivationName
     )
@@ -126,7 +129,7 @@ case class IVar(x: String, ty: Type) extends ISerious {
     "\\texttt{" + pprint + s"}"
   )
 
-  def derivationName = "TYP-VAR"
+  def derivationName = "TVAR"
 }
 
 /** Tag to mark a subtree as in Checked mode */

@@ -18,14 +18,14 @@ case class AscriptionHandler(reducer: SimpleReducer)(using
       */
     case (
           lstack @ IContext(
-            IAsc(t1 @ IAsc(v, ty1, ev1), ty2, ev2),
+            IAsc(t1 @ IAsc(v, ty1, ev1, _), ty2, ev2, s),
             env
           ) :: lxs,
           lenv
         ) if t1.isValue =>
       trans(ev1, ev2) match {
         case Left(ev) =>
-          val newE = IAsc(v, ty2, ev)
+          val newE = IAsc(v, ty2, ev, s)
           Step(
             reducer,
             lstack,
@@ -39,12 +39,12 @@ case class AscriptionHandler(reducer: SimpleReducer)(using
       }
 
     /** IN {v1 , [] :: T, ...} OUT {v1 :: T, ...} */
-    case (c1 :: IContext(IAsc(IHole(), ty, ev), env) :: lxs, lenv)
+    case (c1 :: IContext(IAsc(IHole(), ty, ev, s), env) :: lxs, lenv)
         if c1.t.isValue =>
       More(() =>
         reducer.reduce(
           IContext(
-            IAsc(c1.t, ty, ev),
+            IAsc(c1.t, ty, ev, s),
             env
           ) :: lxs,
           lenv
@@ -53,11 +53,11 @@ case class AscriptionHandler(reducer: SimpleReducer)(using
 
     /** IN {t1 :: T, ... | ...} OUT {t1, [] :: T, ... | ...}
       */
-    case (IContext(IAsc(t, ty, ev), env) :: lxs, lenv) if !t.isValue =>
+    case (IContext(IAsc(t, ty, ev, s), env) :: lxs, lenv) if !t.isValue =>
       More(() =>
         reducer.reduce(
           IContext(t, env) :: IContext(
-            IAsc(IHole(), ty, ev),
+            IAsc(IHole(), ty, ev, s),
             env
           ) :: lxs,
           lenv

@@ -180,8 +180,8 @@ case class IPair(t1: TypingDerivation, t2: TypingDerivation) extends ISerious {
   */
 case class IInl(t: TypingDerivation, tpe2: Type) extends ISerious {
   override def isValue = t match {
-    case IAsc(_, _, _) => false
-    case _             => t.isValue
+    case IAsc(_, _, _, _) => false
+    case _                => t.isValue
   }
 
   def tpe = SumType(t.tpe, tpe2)
@@ -207,8 +207,8 @@ case class IInl(t: TypingDerivation, tpe2: Type) extends ISerious {
   */
 case class IInr(t: TypingDerivation, tpe2: Type) extends ISerious {
   override def isValue = t match {
-    case IAsc(_, _, _) => false
-    case _             => t.isValue
+    case IAsc(_, _, _, _) => false
+    case _                => t.isValue
   }
 
   def tpe = SumType(tpe2, t.tpe)
@@ -310,11 +310,16 @@ case class IApp(t1: TypingDerivation, t2: TypingDerivation) extends ISerious {
   * @param t
   *   The type to annotate the term with
   */
-case class IAsc(t: TypingDerivation, ty: Type, e: Evidence) extends ISerious {
+case class IAsc(
+    t: TypingDerivation,
+    ty: Type,
+    e: Evidence,
+    synth: Boolean = true
+) extends ISerious {
 
   override def isValue: Boolean = t match {
-    case IAsc(_, _, _) => false
-    case _             => t.isValue
+    case IAsc(_, _, _, _) => false
+    case _                => t.isValue
   }
 
   def tpe = {
@@ -331,8 +336,12 @@ case class IAsc(t: TypingDerivation, ty: Type, e: Evidence) extends ISerious {
     // s"(${if (o.hideEvidences) "" else e.toLatex} ${t.toLatex} :: ${ty.toLatex})"
     if (isValue)
       s"${t.toLatex}_{${if (o.hideEvidences) "" else e.toLatex}}"
-    else
-      s"(${if (o.hideEvidences) "" else e.toLatex} ${t.toLatex})"
+    else {
+      if (synth)
+        s"(${if (o.hideEvidences) "" else s"{\\color{#cccccc} ${e.toLatex}}"} ${t.toLatex} {\\color{#cccccc} :: ${ty.toLatex}})"
+      else
+        s"(${if (o.hideEvidences) "" else e.toLatex} ${t.toLatex} :: ${ty.toLatex})"
+    }
   )
 
   override val subTerms = Seq(t)
@@ -343,7 +352,11 @@ case class IAsc(t: TypingDerivation, ty: Type, e: Evidence) extends ISerious {
 }
 object IAsc {
   def apply(t: TypingDerivation, ty: Type) = {
-    new IAsc(t, ty, EvidenceOps.initialEvidence(t.tpe, ty))
+    new IAsc(t, ty, EvidenceOps.initialEvidence(t.tpe, ty), true)
+  }
+
+  def source(t: TypingDerivation, ty: Type) = {
+    new IAsc(t, ty, EvidenceOps.initialEvidence(t.tpe, ty), false)
   }
 }
 
@@ -386,7 +399,7 @@ case class IFirst(t: TypingDerivation) extends ISerious {
   override def debug = "fst(" + t.debug + ")"
 
   def toLatex(implicit o: IOptions): String = postProcess(
-    "\\fst^{" + "}(" + t.toLatex + ")"
+    "\\mathsf{fst}^{" + "}(" + t.toLatex + ")"
   )
 
   override val subTerms = Seq(t)
@@ -406,7 +419,7 @@ case class ISecond(t: TypingDerivation) extends ISerious {
   override def debug = "snd(" + t.debug + ")"
 
   def toLatex(implicit o: IOptions): String = postProcess(
-    "\\snd^{" + "}(" + t.toLatex + ")"
+    "\\mathsf{snd}^{" + "}(" + t.toLatex + ")"
   )
 
   override val subTerms = Seq(t)
@@ -484,7 +497,7 @@ case class ILambda(x: IVar, t: TypingDerivation) extends SimpleValue {
 
   override val subTerms = Seq(t)
 
-  def derivationName = "TLm"
+  def derivationName = "TLam"
 
   override val mode = 2
 }

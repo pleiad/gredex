@@ -53,7 +53,7 @@ case class BooleanHandler(reducer: SimpleReducer)(using
       */
     case (
           lstack @ IContext(
-            t @ IIte(IAsc(IBool(v), ty, e), t2, t3),
+            t @ IIte(IAsc(IBool(v), ty, e, s), t2, t3),
             env
           ) :: lxs,
           lenv

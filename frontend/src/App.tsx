@@ -49,8 +49,9 @@ function App() {
     <MathJaxContext
       version={3}
       config={{
-        loader: { load: ["[tex]/bbox"] },
+        loader: { load: ['[tex]/color', "[tex]/bbox"] },
         tex: {
+          packages: {'[+]': ['color']},
           macros: {
             /* Define your global macros here */
           },

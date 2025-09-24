@@ -23,7 +23,7 @@ object TypedElaboration extends TypedElaboration {
         t // only for optimization
       case _ =>
         t match {
-          case IAsc(_, ty2, _) if ty == ty2 => t // already an IAsc
+          case IAsc(_, ty2, _, _) if ty == ty2 => t // already an IAsc
           case x if !x.isValue && x.tpe == ty =>
             t // if its a redex it will be an ascription already
           // case x: IVar if x.ty == ty => t
@@ -276,7 +276,7 @@ object TypedElaboration extends TypedElaboration {
       case Frame(Asc(Hole(), t), env, Infer) :: xs =>
         istack match {
           case ie :: ixs => {
-            apply(xs, IAsc(ie, t) :: ixs)
+            apply(xs, IAsc.source(ie, t) :: ixs)
           }
           case _ => throw new StackError
         }
