@@ -49,16 +49,16 @@ function App() {
     <MathJaxContext
       version={3}
       config={{
-        loader: { load: ['[tex]/color', "[tex]/bbox"] },
+        loader: { load: ["[tex]/color", "[tex]/bbox"] },
         tex: {
-          packages: {'[+]': ['color']},
+          packages: { "[+]": ["color"] },
           macros: {
             /* Define your global macros here */
           },
         },
       }}
     >
-      <Router>
+      <Router basename={import.meta.env.BASE_URL}>
         <CssBaseline />
         <div className="main">
           <AppBar position="static">
