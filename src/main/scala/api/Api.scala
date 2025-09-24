@@ -131,7 +131,8 @@ object Api {
               Parser.parse(formatInput(f.program)) match {
                 case Right(term) =>
                   try {
-                    implicit val o: IOptions = IOptions(f.hideEvidences)
+                    implicit val o: IOptions =
+                      IOptions(f.hideEvidences, hideSynthAsc = f.hideSynthAsc)
                     val reducer = SimpleReducer(
                       TypedElaboration(term),
                       fromStep = f.fromStep,

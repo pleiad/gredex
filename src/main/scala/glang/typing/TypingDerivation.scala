@@ -64,7 +64,6 @@ trait TypingDerivation
     * @return
     */
   def getLatexDerivationTree(implicit o: IOptions): LatexDerivationTree = {
-    println(s"hyde? ${o.hideSynthAsc}")
     val skip = o.hideSynthAsc && (this match {
       case v: IAsc if v.synth => true
       case _                  => false

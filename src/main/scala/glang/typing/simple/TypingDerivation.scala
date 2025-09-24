@@ -347,11 +347,14 @@ case class IAsc(
     if (isValue)
       s"${t.toLatex}_{${if (o.hideEvidences) "" else e.toLatex}}"
     else {
-      if (synth)
-        s"{\\color{#cccccc} (${
-            if (o.hideEvidences) "" else s"${e.toLatex}"
-          }} ${ptfy(t, _.toLatex)} {\\color{#cccccc} :: ${ty.toLatex})}"
-      else
+      if (synth) {
+        if (o.hideSynthAsc) s"${t.toLatex}"
+        else
+          s"{\\color{#cccccc} (${
+              if (o.hideEvidences) "" else s"${e.toLatex}"
+            }} ${ptfy(t, _.toLatex)} {\\color{#cccccc} :: ${ty.toLatex})}"
+
+      } else
         s"(${if (o.hideEvidences) "" else e.toLatex} ${t.toLatex} :: ${ty.toLatex})"
     }
   )
