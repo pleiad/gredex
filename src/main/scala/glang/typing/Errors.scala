@@ -14,7 +14,7 @@ case class IError(msg: String = "")
   *   The term that caused the exception.
   */
 class VariableNotFoundException(t: Term)
-    extends Error("Can't find type for variable " + t.pprint)
+    extends Error("Free identifier: " + t.pprint)
 
 /** Exception thrown for invalid subtyping relations.
   *

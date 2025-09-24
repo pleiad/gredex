@@ -46,9 +46,18 @@ const DerivationTree: React.FC<DerivationTreeProps> = ({
   const ref = useRef<HTMLDivElement>(null);
 
   const expand = useCallback(
-    (key: string) => () => {
+    (key: string) => (event: React.MouseEvent) => {
+      event.stopPropagation();
       setPremiseRendered(true);
       setOpen((prev) => ({ ...prev, [key]: true }));
+    },
+    []
+  );
+
+  const collapse = useCallback(
+    (key: string) => (event: React.MouseEvent) => {
+      event.stopPropagation();
+      setOpen((prev) => ({ ...prev, [key]: false }));
     },
     []
   );
@@ -83,7 +92,9 @@ const DerivationTree: React.FC<DerivationTreeProps> = ({
               display:
                 allOpen || premises.length <= 0 || open[key] ? "" : "none",
               borderBottom: `1px solid ${isDarkMode ? "#bbb" : "#ccc"}`,
+              cursor: "pointer",
             }}
+            onClick={open[key] ? collapse(key) : undefined}
           >
             {key <= "0" ? (
               <div>

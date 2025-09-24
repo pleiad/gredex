@@ -17,6 +17,14 @@ import glang.syntax.Type
 import glang.syntax.simple.TypeOps.*
 import glang.typing.simple.evidence.{Evidence, EvidenceOps}
 
+object TypingDerivationOps {
+  def parentify(t: TypingDerivation, f: TypingDerivation => String) = t match {
+    case _: ISerious => "(" + f(t) + ")"
+    case _           => f(t)
+  }
+}
+import TypingDerivationOps.{parentify => ptfy}
+
 /** A derivation tree of a number
   *
   * @param v
@@ -98,7 +106,7 @@ case class IBinOp(t1: TypingDerivation, t2: TypingDerivation, op: String)
   }
 
   def toLatex(implicit o: IOptions) = postProcess(
-    "(" + t1.toLatex + " " + opToLatex(op) + " " + t2.toLatex + ")"
+    ptfy(t1, _.toLatex) + " " + opToLatex(op) + " " + ptfy(t2, _.toLatex)
   )
 
   override val subTerms = Seq(t1, t2)
@@ -133,7 +141,7 @@ case class IUnOp(t1: TypingDerivation, op: String) extends ISerious {
   }
 
   def toLatex(implicit o: IOptions) = postProcess(
-    "(" + opToLatex(op) + " " + t1.toLatex + ")"
+    opToLatex(op) + " " + ptfy(t1, _.toLatex)
   )
 
   override val subTerms = Seq(t1)
@@ -292,7 +300,7 @@ case class IApp(t1: TypingDerivation, t2: TypingDerivation) extends ISerious {
 
   def toLatex(implicit o: IOptions): String = {
 
-    postProcess("(" + t1.toLatex + t2.toLatex + ")")
+    postProcess(ptfy(t1, _.toLatex) + ptfy(t2, _.toLatex))
   }
 
   override val subTerms = Seq(t1, t2)
@@ -338,7 +346,9 @@ case class IAsc(
       s"${t.toLatex}_{${if (o.hideEvidences) "" else e.toLatex}}"
     else {
       if (synth)
-        s"(${if (o.hideEvidences) "" else s"{\\color{#cccccc} ${e.toLatex}}"} ${t.toLatex} {\\color{#cccccc} :: ${ty.toLatex}})"
+        s"{\\color{#cccccc} (${
+            if (o.hideEvidences) "" else s"${e.toLatex}"
+          }} ${ptfy(t, _.toLatex)} {\\color{#cccccc} :: ${ty.toLatex})}"
       else
         s"(${if (o.hideEvidences) "" else e.toLatex} ${t.toLatex} :: ${ty.toLatex})"
     }
@@ -399,7 +409,7 @@ case class IFirst(t: TypingDerivation) extends ISerious {
   override def debug = "fst(" + t.debug + ")"
 
   def toLatex(implicit o: IOptions): String = postProcess(
-    "\\mathsf{fst}^{" + "}(" + t.toLatex + ")"
+    "\\mathsf{fst}^{" + "}(" + ptfy(t, _.toLatex) + ")"
   )
 
   override val subTerms = Seq(t)
@@ -492,7 +502,7 @@ case class ILambda(x: IVar, t: TypingDerivation) extends SimpleValue {
   override def debug = "(" + lambdaS.pprint + x.debug + ". " + t.debug + s")"
 
   def toLatex(implicit o: IOptions): String = postProcess(
-    "(\\lambda " + x.toLatex + ". " + t.toLatex + s")"
+    s"(\\lambda ${x.toLatex}: ${tpe.toLatex}. ${t.toLatex})"
   )
 
   override val subTerms = Seq(t)

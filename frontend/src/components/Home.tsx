@@ -310,7 +310,7 @@ export default function Main() {
 
       {intrinsicTerm ? (
         <div>
-          <Typography variant="subtitle1">Parsed program</Typography>
+          <Typography variant="subtitle1">Elaborated program</Typography>
           <LoadableContent loading={loadingI}></LoadableContent>
           <div
             id="intrinsicTerm"

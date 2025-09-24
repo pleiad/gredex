@@ -55,7 +55,7 @@ export default function Syntax({ showLabels }: { showLabels: boolean }) {
             <td></td>
             <td></td>
             <td>
-              (λx.e) | {"e e"} | {"fix x. e"} |
+              (λx.e) | (λx:T.e) | {"e e"} | {"fix x. e"} |
             </td>
             <td></td>
           </tr>
