@@ -45,7 +45,7 @@ class ITypeNotFound(op: String)
   */
 class IMeetError(t1: Type, t2: Type)
     extends IRuntimeException(
-      "Meet error: " + t1.pprint + " and " + t2.pprint + " are not compatible."
+      "Runtime type error: " + t1.pprint + " and " + t2.pprint + " are not compatible."
     )
 
 /** Exception thrown when the interior is not defined
@@ -57,7 +57,7 @@ class IMeetError(t1: Type, t2: Type)
   */
 class IInteriorError(t1: Type, t2: Type)
     extends IRuntimeException(
-      "Interior error: " + t1.pprint + " and " + t2.pprint + " is not defined."
+      "Static type error: " + t1.pprint + " and " + t2.pprint + " are not compatible."
     )
 
 /** Exception thrown for stack errors.
