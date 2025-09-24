@@ -202,9 +202,20 @@ object Api {
         }
       )
 
-    val dotenv = Dotenv.load()
-    val host = Option(dotenv.get("HOST")).getOrElse("0.0.0.0")
-    val port = Option(dotenv.get("PORT")).getOrElse("8080").toInt
+    val (host, port) =
+      try {
+        val dotenv = Dotenv.load()
+        val host = Option(dotenv.get("HOST")).getOrElse("0.0.0.0")
+        val port = Option(dotenv.get("PORT")).getOrElse("8080").toInt
+        (host, port)
+      } catch {
+        case _: Throwable =>
+          println(
+            "⚠️ Warning: .env file not found or invalid. Using default HOST and PORT."
+          )
+          ("0.0.0.0", 8080)
+      }
+
     val bindingFuture = Http().newServerAt(host, port).bind(route)
     println(s"Server online at http://0.0.0.0:8080/")
     sys.addShutdownHook {
