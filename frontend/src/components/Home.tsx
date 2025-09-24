@@ -70,6 +70,7 @@ export default function Main() {
   const [newSteps, setNewSteps] = useState(0);
   const [stepSize, setStepSize] = useState(20);
   const [hideEvidences, setHideEvidences] = useState(false);
+  const [hideSynthAsc, setHideSynthAsc] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -121,6 +122,7 @@ export default function Main() {
           body: JSON.stringify({
             program: program,
             hideEvidences: hideEvidences,
+            hideSynthAsc: hideSynthAsc,
             fromStep: fromStep,
             stepSize: Math.max(stepSize, 1),
           }),
@@ -169,6 +171,7 @@ export default function Main() {
         body: JSON.stringify({
           program: program,
           hideEvidences: hideEvidences,
+          hideSynthAsc: hideSynthAsc,
           fromStep: fromStep,
           stepSize: Math.max(stepSize, 1),
         }),
@@ -289,6 +292,17 @@ export default function Main() {
                 />
               }
               label="Hide evidences"
+            />
+          </FormGroup>
+          <FormGroup>
+            <FormControlLabel
+              control={
+                <Switch
+                  checked={hideSynthAsc}
+                  onChange={(e) => setHideSynthAsc(e.target.checked)}
+                />
+              }
+              label="Hide synthetic ascriptions"
             />
           </FormGroup>
           <Button sx={{ ml: 2 }} onClick={() => navigate("/0")}>

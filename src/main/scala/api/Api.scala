@@ -31,11 +31,12 @@ final case class Program(
     program: String,
     hideEvidences: Boolean = false,
     fromStep: Int = 0,
-    stepSize: Int = 20
+    stepSize: Int = 20,
+    hideSynthAsc: Boolean = false
 )
 
 object JsonProtocol extends DefaultJsonProtocol {
-  implicit val programFormat: RootJsonFormat[Program] = jsonFormat4(Program)
+  implicit val programFormat: RootJsonFormat[Program] = jsonFormat5(Program)
   /*implicit val latexJudgmentFormat: RootJsonFormat[LatexJudgment] = jsonFormat1(
     LatexJudgment
   )
@@ -86,7 +87,8 @@ object Api {
                 case Right(term) =>
                   try {
 
-                    implicit val o: IOptions = IOptions(f.hideEvidences)
+                    implicit val o: IOptions =
+                      IOptions(f.hideEvidences, hideSynthAsc = f.hideSynthAsc)
                     val iterm = TypedElaboration(term)
 
                     val latex = iterm.toLatex

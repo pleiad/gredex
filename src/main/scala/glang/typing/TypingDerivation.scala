@@ -1,12 +1,13 @@
 package glang.typing
 
-import glang.syntax.simple.TypeOps._
-import glang.syntax.Syntax._
-import glang.syntax._
+import glang.syntax.simple.TypeOps.*
+import glang.syntax.Syntax.*
+import glang.syntax.*
 import glang.runtime.RuntimeEnvironment
 import glang.runtime.IRuntimeException
 import glang.runtime.IResult
 import glang.typing.Latexable
+import glang.typing.simple.IAsc
 
 trait TypingDerivation
     extends Term
@@ -63,14 +64,23 @@ trait TypingDerivation
     * @return
     */
   def getLatexDerivationTree(implicit o: IOptions): LatexDerivationTree = {
-    LatexDerivationTree(
-      toLatex + s" : ${tpe.toLatex}",
-      subTerms.map { t =>
-        t.getLatexDerivationTree(o.copy(hideBoxes = true))
-      }.toList,
-      judgments.map { j => LatexJudgment(j.toLatex) }.toList,
-      derivationName
-    )
+    println(s"hyde? ${o.hideSynthAsc}")
+    val skip = o.hideSynthAsc && (this match {
+      case v: IAsc if v.synth => true
+      case _                  => false
+    })
+    if (skip) {
+      this.asInstanceOf[IAsc].t.getLatexDerivationTree
+    } else {
+      LatexDerivationTree(
+        toLatex + s" : ${tpe.toLatex}",
+        subTerms.map { t =>
+          t.getLatexDerivationTree(o.copy(hideBoxes = true))
+        }.toList,
+        judgments.map { j => LatexJudgment(j.toLatex) }.toList,
+        derivationName
+      )
+    }
   }
 
   /** decrease the highlight counter by one */

@@ -19,6 +19,8 @@ import glang.typing.simple.evidence.{Evidence, EvidenceOps}
 
 object TypingDerivationOps {
   def parentify(t: TypingDerivation, f: TypingDerivation => String) = t match {
+    case _: IAsc     => f(t)
+    case _: IVar     => f(t)
     case _: ISerious => "(" + f(t) + ")"
     case _           => f(t)
   }
@@ -300,7 +302,7 @@ case class IApp(t1: TypingDerivation, t2: TypingDerivation) extends ISerious {
 
   def toLatex(implicit o: IOptions): String = {
 
-    postProcess(ptfy(t1, _.toLatex) + ptfy(t2, _.toLatex))
+    postProcess(ptfy(t1, _.toLatex) + "\\," + ptfy(t2, _.toLatex))
   }
 
   override val subTerms = Seq(t1, t2)
@@ -502,7 +504,7 @@ case class ILambda(x: IVar, t: TypingDerivation) extends SimpleValue {
   override def debug = "(" + lambdaS.pprint + x.debug + ". " + t.debug + s")"
 
   def toLatex(implicit o: IOptions): String = postProcess(
-    s"(\\lambda ${x.toLatex}: ${tpe.toLatex}. ${t.toLatex})"
+    s"(\\lambda ${x.toLatex}: ${x.tpe.toLatex}. ${t.toLatex})"
   )
 
   override val subTerms = Seq(t)
