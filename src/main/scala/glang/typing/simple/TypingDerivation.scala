@@ -328,7 +328,11 @@ case class IAsc(t: TypingDerivation, ty: Type, e: Evidence) extends ISerious {
   override def debug = "(" + t.debug + " : " + ty.debug + ")"
 
   def toLatex(implicit o: IOptions): String = postProcess(
-    s"(${if (o.hideEvidences) "" else e.toLatex} ${t.toLatex} :: ${ty.toLatex})"
+    // s"(${if (o.hideEvidences) "" else e.toLatex} ${t.toLatex} :: ${ty.toLatex})"
+    if (isValue)
+      s"${t.toLatex}_{${if (o.hideEvidences) "" else e.toLatex}}"
+    else
+      s"(${if (o.hideEvidences) "" else e.toLatex} ${t.toLatex})"
   )
 
   override val subTerms = Seq(t)
