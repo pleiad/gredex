@@ -27,6 +27,8 @@ libraryDependencies += "org.scalameta" %% "munit" % "0.7.29" % Test
 
 libraryDependencies += "org.scala-lang.modules" %% "scala-parser-combinators" % "2.4.0"
 
+libraryDependencies += "io.github.cdimascio" % "java-dotenv" % "3.2.0"
+
 lazy val buildFrontend =
   taskKey[Unit]("Build frontend with npm and copy to public")
 

@@ -23,6 +23,7 @@ import glang.typing.{
 }
 import glang.typing.simple.TypedElaboration
 import glang.runtime.simple.SimpleReducer
+import io.github.cdimascio.dotenv.Dotenv
 
 import scala.concurrent.duration.Duration
 
@@ -201,7 +202,10 @@ object Api {
         }
       )
 
-    val bindingFuture = Http().newServerAt("0.0.0.0", 8080).bind(route)
+    val dotenv = Dotenv.load()
+    val host = Option(dotenv.get("HOST")).getOrElse("0.0.0.0")
+    val port = Option(dotenv.get("PORT")).getOrElse("8080").toInt
+    val bindingFuture = Http().newServerAt(host, port).bind(route)
     println(s"Server online at http://0.0.0.0:8080/")
     sys.addShutdownHook {
       bindingFuture
