@@ -104,7 +104,7 @@ object Api {
                     )
                   } catch {
                     case e =>
-                      e.printStackTrace()
+                      // e.printStackTrace()
                       complete(
                         JsObject(
                           "status" -> JsString("KO"),
