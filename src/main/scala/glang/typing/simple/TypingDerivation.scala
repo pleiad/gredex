@@ -341,7 +341,7 @@ case class IAsc(
   def pprint = "(" + t.pprint + " :: " + ty.pprint + ")"
 
   override def debug = "(" + t.debug + " : " + ty.debug + ")"
-
+  
   def toLatex(implicit o: IOptions): String = postProcess(
     // s"(${if (o.hideEvidences) "" else e.toLatex} ${t.toLatex} :: ${ty.toLatex})"
     if (isValue && o.valueEvidenceWrapper)
@@ -350,10 +350,9 @@ case class IAsc(
       if (synth) {
         if (o.hideSynthAsc) s"${t.toLatex}"
         else
-          s"{\\color{#89CFF0} (${
-              if (o.hideEvidences) "" else s"${e.toLatex}"
-            }} ${ptfy(t, _.toLatex)} {\\color{#89CFF0}\\,:: ${ty.toLatex})}"
-
+          s"{${o.asc_col} (${
+              if (o.hideEvidences) "" else s"${o.ev_col}${e.toLatex}"
+            }} ${ptfy(t, _.toLatex)} {${o.asc_col}\\,:: ${ty.toLatex})}"
       } else
         s"(${if (o.hideEvidences) "" else e.toLatex} ${t.toLatex}\\,:: ${ty.toLatex})"
     }

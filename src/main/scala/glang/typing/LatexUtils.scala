@@ -83,5 +83,7 @@ case class IOptions(
     g: RuntimeEnvironment = new RuntimeEnvironment(),
     hideBoxes: Boolean = false,
     hideSynthAsc: Boolean = false,
-    valueEvidenceWrapper: Boolean = false
+    valueEvidenceWrapper: Boolean = false,
+    ev_col: String = "\\color{#088F8F}",
+    asc_col: String = "\\color{#89CFF0}",
 )

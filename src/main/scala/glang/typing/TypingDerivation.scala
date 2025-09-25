@@ -38,9 +38,10 @@ trait TypingDerivation
     val text = s
     /* highlighting and boxing of text */
     val htext = if (highlight == 1) s"\\highlight{$text}" else text
-    if (boxed == 1 && !o.hideBoxes) s"\\bbox[1px,border:2px solid red]{$htext}"
+    if (boxed == 1 && !o.hideBoxes) s"\\underline{$htext}" //  bbox[1px,border:2px solid blue]
     else htext
   }
+
 
   /** The subterms of the derivation By default they are empty
     */

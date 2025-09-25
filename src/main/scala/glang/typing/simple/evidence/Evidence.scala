@@ -10,10 +10,9 @@ type EType = Type
 case class Evidence(l: EType, r: EType) extends Highlighteable with Boxeable {
 
   def toLatex(implicit o: IOptions): String = {
-
     val text = {
       // s"\\langle ${l.toLatex}, ${r.toLatex} \\rangle"
-      s"\\langle ${l.toLatex} \\rangle"
+      s"{${o.ev_col}\\langle ${l.toLatex} \\rangle}"
     }
     val htext = if (highlight == 1) s"\\highlight{$text}" else text
     if (boxed == 1 && !o.hideBoxes) s"\\bbox[1px,border:2px solid red]{$htext}"
