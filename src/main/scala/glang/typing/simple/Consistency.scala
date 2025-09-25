@@ -19,4 +19,6 @@ case class Consistency(t1: Type, t2: Type, ev: Evidence) extends Judgement {
       s"${if (!o.hideEvidences) s"${ev.toLatex} \\vdash" else ""}  ${t1.toLatex} $op ${t2.toLatex}"
     judgment
   }
+
+  def isReflexive(): Boolean = t1 == t2
 }

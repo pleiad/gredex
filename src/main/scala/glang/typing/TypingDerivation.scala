@@ -66,10 +66,13 @@ trait TypingDerivation
       t: TypingDerivation
   )(implicit o: IOptions): List[LatexJudgment] = {
     t.subTerms.flatMap {
-      case a: IAsc if a.synth && !a.isValue =>
-        a.judgments.map { j =>
-          LatexJudgment(j.toLatex)
-        }.toList ++ collectChildSynthJudgments(a)
+      case a: IAsc if a.synth =>
+        a.judgments
+          .filter(c => !c.isReflexive())
+          .map { j =>
+            LatexJudgment(j.toLatex)
+          }
+          .toList ++ collectChildSynthJudgments(a)
       case other => List()
     }.toList
 

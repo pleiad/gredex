@@ -18,4 +18,11 @@ trait Judgement {
     *   The latex representation of the judgment
     */
   def toLatex(implicit o: IOptions): String
+
+  /** Check if the judgment is reflexive
+    *
+    * @return
+    *   true if the judgment is reflexive, false otherwise
+    */
+  def isReflexive(): Boolean
 }
