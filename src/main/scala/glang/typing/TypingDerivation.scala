@@ -58,28 +58,45 @@ trait TypingDerivation
     */
   def derivationName: String
 
+  /** Collect all the judgments of the child synth asc nodes recursively
+    * @param t
+    * @return
+    */
+  def collectChildSynthJudgments(
+      t: TypingDerivation
+  )(implicit o: IOptions): List[LatexJudgment] = {
+    t.subTerms.flatMap {
+      case a: IAsc if a.synth && !a.isValue =>
+        a.judgments.map { j =>
+          LatexJudgment(j.toLatex)
+        }.toList ++ collectChildSynthJudgments(a)
+      case other => List()
+    }.toList
+
+  }
+
   /** Get the latex representation of the term
     * @param o
     *   The options to use in the conversion
     * @return
     */
   def getLatexDerivationTree(implicit o: IOptions): LatexDerivationTree = {
-    val skip = o.hideSynthAsc && (this match {
-      case v: IAsc if v.synth => true
-      case _                  => false
-    })
-    if (skip) {
-      this.asInstanceOf[IAsc].t.getLatexDerivationTree
-    } else {
-      LatexDerivationTree(
-        toLatex + s" : ${tpe.toLatex}",
-        subTerms.map { t =>
-          t.getLatexDerivationTree(o.copy(hideBoxes = true))
-        }.toList,
-        judgments.map { j => LatexJudgment(j.toLatex) }.toList,
-        derivationName
-      )
+    this match {
+      case v: IAsc if o.hideSynthAsc && v.synth => v.t.getLatexDerivationTree
+      case _ =>
+        val extraJudgments = collectChildSynthJudgments(this)
+        LatexDerivationTree(
+          toLatex + s" : ${tpe.toLatex}",
+          subTerms.map { t =>
+            t.getLatexDerivationTree(o.copy(hideBoxes = true))
+          }.toList,
+          judgments.map { j =>
+            LatexJudgment(j.toLatex)
+          }.toList ++ extraJudgments,
+          derivationName
+        )
     }
+
   }
 
   /** decrease the highlight counter by one */
