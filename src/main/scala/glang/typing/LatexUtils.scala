@@ -82,5 +82,6 @@ case class IOptions(
     hideEvidences: Boolean = false,
     g: RuntimeEnvironment = new RuntimeEnvironment(),
     hideBoxes: Boolean = false,
-    hideSynthAsc: Boolean = false
+    hideSynthAsc: Boolean = false,
+    valueEvidenceWrapper: Boolean = false
 )

@@ -32,11 +32,12 @@ final case class Program(
     hideEvidences: Boolean = false,
     fromStep: Int = 0,
     stepSize: Int = 20,
-    hideSynthAsc: Boolean = false
+    hideSynthAsc: Boolean = false,
+    valueEvidenceWrapper: Boolean = false
 )
 
 object JsonProtocol extends DefaultJsonProtocol {
-  implicit val programFormat: RootJsonFormat[Program] = jsonFormat5(Program)
+  implicit val programFormat: RootJsonFormat[Program] = jsonFormat6(Program)
   /*implicit val latexJudgmentFormat: RootJsonFormat[LatexJudgment] = jsonFormat1(
     LatexJudgment
   )
@@ -88,7 +89,11 @@ object Api {
                   try {
 
                     implicit val o: IOptions =
-                      IOptions(f.hideEvidences, hideSynthAsc = f.hideSynthAsc)
+                      IOptions(
+                        f.hideEvidences,
+                        hideSynthAsc = f.hideSynthAsc,
+                        valueEvidenceWrapper = f.valueEvidenceWrapper
+                      )
                     val iterm = TypedElaboration(term)
 
                     val latex = iterm.toLatex
@@ -132,7 +137,11 @@ object Api {
                 case Right(term) =>
                   try {
                     implicit val o: IOptions =
-                      IOptions(f.hideEvidences, hideSynthAsc = f.hideSynthAsc)
+                      IOptions(
+                        f.hideEvidences,
+                        hideSynthAsc = f.hideSynthAsc,
+                        valueEvidenceWrapper = f.valueEvidenceWrapper
+                      )
                     val reducer = SimpleReducer(
                       TypedElaboration(term),
                       fromStep = f.fromStep,

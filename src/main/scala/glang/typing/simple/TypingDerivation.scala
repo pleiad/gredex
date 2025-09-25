@@ -344,7 +344,7 @@ case class IAsc(
 
   def toLatex(implicit o: IOptions): String = postProcess(
     // s"(${if (o.hideEvidences) "" else e.toLatex} ${t.toLatex} :: ${ty.toLatex})"
-    if (isValue)
+    if (isValue && o.valueEvidenceWrapper)
       s"${t.toLatex}_{${if (o.hideEvidences) "" else e.toLatex}}"
     else {
       if (synth) {

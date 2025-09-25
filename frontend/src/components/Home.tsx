@@ -71,6 +71,7 @@ export default function Main() {
   const [stepSize, setStepSize] = useState(20);
   const [hideEvidences, setHideEvidences] = useState(false);
   const [hideSynthAsc, setHideSynthAsc] = useState(false);
+  const [valueEvidenceWrapper, setValueEvidenceWrapper] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -123,6 +124,7 @@ export default function Main() {
             program: program,
             hideEvidences: hideEvidences,
             hideSynthAsc: hideSynthAsc,
+            valueEvidenceWrapper: valueEvidenceWrapper,
             fromStep: fromStep,
             stepSize: Math.max(stepSize, 1),
           }),
@@ -172,6 +174,7 @@ export default function Main() {
           program: program,
           hideEvidences: hideEvidences,
           hideSynthAsc: hideSynthAsc,
+          valueEvidenceWrapper: valueEvidenceWrapper,
           fromStep: fromStep,
           stepSize: Math.max(stepSize, 1),
         }),
@@ -279,7 +282,12 @@ export default function Main() {
       </Box>
 
       <Box mt={2}>
-        <Stack direction="row" alignItems="center" spacing={2}>
+        <Stack
+          direction="row"
+          alignItems="center"
+          spacing={2}
+          sx={{ flexWrap: "wrap" }}
+        >
           <Button variant="contained" color="primary" onClick={typecheck}>
             Typecheck
           </Button>
@@ -303,6 +311,17 @@ export default function Main() {
                 />
               }
               label="Hide synthetic ascriptions"
+            />
+          </FormGroup>
+          <FormGroup>
+            <FormControlLabel
+              control={
+                <Switch
+                  checked={valueEvidenceWrapper}
+                  onChange={(e) => setValueEvidenceWrapper(e.target.checked)}
+                />
+              }
+              label="Value evidence as tags"
             />
           </FormGroup>
           <Button sx={{ ml: 2 }} onClick={() => navigate("/0")}>
