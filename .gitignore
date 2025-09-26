@@ -9,4 +9,8 @@ hs_err_pid*
 /project/
 src/main/resources/public/index.html
 src/main/resources/public/assets
+src/main/resources/public/favicon.ico
 .DS_Store
+.vscode/
+frontend/package-lock.json
+.metals/metals.mv.db
